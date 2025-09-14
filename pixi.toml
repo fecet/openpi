@@ -1,0 +1,103 @@
+[project]
+authors = ["fecet <xiezej@gmail.com>"]
+channels = ["https://prefix.dev/meta-forge", "conda-forge"]
+description = "OpenPI: robotics VLA models (JAX + PyTorch)"
+name = "pi05"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[system-requirements]
+cuda = "12.7"
+libc = { family = "glibc", version = "2.28" }
+
+[tasks]
+test = { cmd = "pytest --strict-markers -m 'not manual'" }
+lint = { cmd = "ruff check ." }
+format = { cmd = "ruff format ." }
+patch-pixi = "rsync -avP src/openpi/models_pytorch/transformers_replace/ $CONDA_PREFIX/lib/python3.11/site-packages/transformers/"
+uv-install = "GIT_LFS_SKIP_SMUDGE=1 uv sync --frozen"
+uv-patch = "uv run patch_transformers.py"
+uv-convert = 'uv run examples/convert_jax_model_to_pytorch.py --checkpoint_dir /data/private/robot/.cache/openpi/openpi-assets/checkpoints/pi05_droid  --config-name "pi05_droid" --output_path /data/private/robot/pi05_droid_torch'
+uv-test = "uv run test.py"
+
+[feature.dev.pypi-options.dependency-overrides]
+numpy = "*"
+datasets = "*"
+rerun-sdk = "*"
+huggingface-hub = "*"
+imageio = "*"
+
+[feature.dev.dependencies]
+# Conda packages (binary/system libs)
+python = ">=3.11,<3.12"
+ffmpeg = "*"
+pytorch = { version = "==2.7.1", build = "*cuda*" }
+datasets = "*"
+numpy = ">=2.0.0"
+numba = "*"
+huggingface_hub = "*"
+# augmax = ">=0.3.4"
+# "dm-tree" = ">=0.1.8"
+einops = ">=0.8.0"
+equinox = ">=0.11.8"
+flatbuffers = ">=24.3.25"
+# flax = "==0.10.2"
+fsspec = "*"
+imageio = ">=2.36.1"
+gcsfs = "*"
+# "jax[cuda12]" = "==0.5.3"
+jaxtyping = "*"
+ml-collections = "*"
+# numpy = ">=1.22.4,<2.0.0"
+# numpydantic = ">=1.6.6"
+# opencv-python = ">=4.10.0.84"
+opencv = "*"
+py-opencv = "*"
+orbax-checkpoint = "*"
+pillow = ">=11.0.0"
+sentencepiece = ">=0.2.0"
+typing-extensions = ">=4.12.2"
+tyro = ">=0.9.5"
+wandb = ">=0.19.1"
+filelock = ">=3.16.1"
+beartype = "==0.19.0"
+treescope = ">=0.1.7"
+transformers = "==4.53.2"
+rich = ">=14.0.0"
+polars = ">=1.30.0"
+ml_dtypes = "*"
+tensorstore = "*"
+
+# My pkgs
+
+jupyterlab = "*"
+ipywidgets = "*"
+jupytext = "*"
+
+jax = "*"
+flax = "*"
+pytest = "*"
+numpydantic = "*"
+just = "*"
+safetensors = "==0.5.3"
+
+[feature.dev.pypi-dependencies]
+# Local workspace pkg
+augmax = "*"
+neopyter = "*"
+tqdm-loggable = ">=0.2"
+gym-aloha = "*"
+lerobot = { git = "https://github.com/huggingface/lerobot", rev = "0cf864870cf29f4738d3ade893e6fd13fbd7cdb5" }
+openpi-client = { path = "packages/openpi-client", editable = true }
+openpi = { path = ".", editable = true }
+
+[dependencies]
+uv = "*"
+
+# VCS sources from uv overrides
+# uv override-dependencies mirrored here (to keep versions consistent)
+[environments]
+dev = ["dev"]
+
+[activation.env]
+UV_FROZEN = "true"
