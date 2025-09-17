@@ -14,7 +14,7 @@ libc = { family = "glibc", version = "2.28" }
 test = { cmd = "pytest --strict-markers -m 'not manual'" }
 lint = { cmd = "ruff check ." }
 format = { cmd = "ruff format ." }
-patch-pixi = "rsync -avP src/openpi/models_pytorch/transformers_replace/ $CONDA_PREFIX/lib/python3.11/site-packages/transformers/"
+# patch-pixi = "rsync -avP src/openpi/models_pytorch/transformers_replace/ $CONDA_PREFIX/lib/python3.11/site-packages/transformers/"
 uv-install = "GIT_LFS_SKIP_SMUDGE=1 uv sync --frozen"
 uv-patch = "uv run patch_transformers.py"
 uv-convert = 'uv run examples/convert_jax_model_to_pytorch.py --checkpoint_dir /data/private/robot/.cache/openpi/openpi-assets/checkpoints/pi05_droid  --config-name "pi05_droid" --output_path /data/private/robot/pi05_droid_torch'
